@@ -82,4 +82,51 @@ COPY INTO raw_hosts (id, name, is_superhost, created_at, updated_at)
  FILE_FORMAT = (type = 'CSV' skip_header = 1
  FIELD_OPTIONALLY_ENCLOSED_BY = '"');
 ```
+## Install DBT on Windows
+I'll use WSL to install DBT, alias created "winhome".
+## Install pip
+```
+curl -o get-pip.py https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+```
+## I'll use a virtual environment to install DBT
+```
+pip install virtualenv
+```
+## Create a virtual environment
+```
+virtualenv venv
+```
+## Activate the virtual environment
+```
+source venv/bin/activate
+```
+## See the list of packages installed
+```
+pip list --format=columns
+```
+## Install DBT
+```
+pip install dbt-snowflake
+```
+## Creating a DBT project and connecting to Snowflake
+```
+dbt init airbnb
+```
+## Configure the connection to Snowflake
+```
+dbt config --provider snowflake --connect "account=dbt;warehouse=COMPUTE_WH;database=AIRBNB;schema=AIRBNB.RAW"
+```
+## You can see your credentials doing
+```
+cat ~/.dbt/profiles.yml
+```
+## Make sure the connection is working
+```
+dbt debug
+```
+
+
+
+
 
