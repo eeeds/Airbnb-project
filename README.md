@@ -125,6 +125,66 @@ cat ~/.dbt/profiles.yml
 ```
 dbt debug
 ```
+## Data Flow Process
+![We'll use DBT to transform the data](images/data_flow_process_1.PNG)
+## Creating raw_listings AS 
+```
+WITH raw_listings AS (
+    SELECT * FROM AIRBNB.RAW.RAW_LISTINGS
+)
+SELECT 
+     id AS listing_id,
+     name AS listing_name,
+     listing_url,
+     room_type,
+     minimum_nights,
+     host_id,
+     price AS price_str,
+     created_at,
+     updated_at
+FROM
+ raw_listings
+``` 
+## Create src_listings in models folder and then execute dbt
+```
+dbt run
+```
+## Create src_reviews.sql
+```
+WITH raw_reviews AS (
+    SELECT * FROM AIRBNB.RAW.RAW_REVIEWS
+)
+SELECT 
+    listing_id,
+    date AS review_date,
+    reviewer_name,
+    comments as review_text,
+    sentiment as review_sentiment
+FROM 
+    raw_reviews
+```
+## Create src_reviews.sql in models folder and then execute dbt
+```
+dbt run
+```
+## Create src_hosts.sql
+```
+WITH raw_hosts AS (
+    SELECT * FROM AIRBNB.RAW.RAW_HOSTS
+)
+SELECT 
+    ID AS HOST_ID,
+    NAME AS HOST_NAME,
+    IS_SUPERHOST,
+    CREATED_AT,
+    UPDATED_AT
+FROM RAW_HOSTS
+```
+## Create src_hosts.sql in models folder and then execute dbt
+```
+dbt run
+```
+
 
 
 
