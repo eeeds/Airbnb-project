@@ -125,6 +125,8 @@ cat ~/.dbt/profiles.yml
 ```
 dbt debug
 ```
+## Materializations: Overview
+![Materializations](images/materializations.PNG)
 ## Data Flow Process
 ![We'll use DBT to transform the data](images/data_flow_process_1.PNG)
 ## Creating raw_listings AS 
@@ -235,9 +237,72 @@ models:
     dim:
       +materialized: table
 ```
-
-
-
-
+## Create a incremental materialization. We'll call it  fct_reviews.sql
+## You can specify the incremental materialization on the top of the file
+## Querys for the incremental materialization
+### Get every review for listing 3176:
+```
+SELECT * FROM "AIRBNB"."DEV"."FCT_REVIEWS" WHERE listing_id=3176;
+```
+### Add a new record to the table:
+```
+INSERT INTO "AIRBNB"."RAW"."RAW_REVIEWS"
+VALUES (3176, CURRENT_TIMESTAMP(), 'Zoltan', 'excellent stay!', 'positive');
+```
+### Rebuild incremental tables
+```
+dbt run --full-refresh
+```
+## Create dim_listings_w_hosts.sql file
+```
+WITH
+l AS (
+ SELECT
+ *
+ FROM
+ {{ ref('dim_listings_cleansed') }}
+),
+h AS (
+ SELECT * 
+ FROM {{ ref('dim_hosts_cleansed') }}
+)
+SELECT 
+ l.listing_id,
+ l.listing_name,
+ l.room_type,
+ l.minimum_nights,
+ l.price,
+ l.host_id,
+ h.host_name,
+ h.is_superhost as host_is_superhost,
+ l.created_at,
+ GREATEST(l.updated_at, h.updated_at) as updated_at
+FROM l
+LEFT JOIN h ON (h.host_id = l.host_id)
+```
+## Add ephemeral materialization to the dbt_project.yml file
+```
+models:
+  dbtlearn:
+    +materialized: view
+    dim:
+      +materialized: table
+    src:
+      +materialized: ephemeral
+```
+## Drop views after ephemeral materialization
+```
+DROP VIEW AIRBNB.DEV.SRC_HOSTS;
+DROP VIEW AIRBNB.DEV.SRC_LISTINGS;
+DROP VIEW AIRBNB.DEV.SRC_REVIEWS;
+```
+## Change materialization to view for dim_hosts_cleansed and dim_listings_cleansed
+```
+{{
+ config(
+ materialized = 'view'
+ )
+}}
+```
 
 
