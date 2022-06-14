@@ -184,6 +184,57 @@ FROM RAW_HOSTS
 ```
 dbt run
 ```
+## Now we'll work on dim tables
+![We'll use DBT to transform the data](images/data_flow_process_2.PNG)
+## Create dim_listings_cleansed and dim_hosts_cleansed views
+```
+WITH src_listings AS (
+    SELECT * FROM {{ref('src_listings')}}
+)
+SELECT 
+    listing_id,
+    listing_name,
+    room_type,
+    CASE
+        WHEN minimum_nights = 0 THEN 1
+        ELSE minimum_nights
+    END AS minimum_nights,
+    host_id,
+    REPLACE(
+        price_str,
+        '$'
+    ) :: NUMBER(
+        10,
+        2
+    ) AS price,
+    created_at,
+    updated_at
+FROM src_listings
+```
+```
+WITH src_hosts AS (
+    SELECT * FROM {{ref('src_hosts')}}
+)
+SELECT 
+    HOST_ID,
+    CASE 
+        WHEN HOST_NAME IS NOT NULL THEN HOST_NAME
+        ELSE NVL(HOST_NAME,'Anonymous')
+    END AS HOST_NAME,
+    IS_SUPERHOST,
+    CREATED_AT,
+    UPDATED_AT
+FROM src_hosts
+```
+## Change how dim tables where be materialized
+## In the dbt_project.yml file, change the materialized_views section
+```
+models:
+  dbtlearn:
+    +materialized: view
+    dim:
+      +materialized: table
+```
 
 
 
