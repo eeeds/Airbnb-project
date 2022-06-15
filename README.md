@@ -228,7 +228,7 @@ SELECT
     UPDATED_AT
 FROM src_hosts
 ```
-## Change how dim tables where be materialized
+## Change how dim tables will be materialized
 ## In the dbt_project.yml file, change the materialized_views section
 ```
 models:
@@ -237,7 +237,7 @@ models:
     dim:
       +materialized: table
 ```
-## Create a incremental materialization. We'll call it  fct_reviews.sql
+## Create an incremental materialization. We'll call it  fct_reviews.sql
 ## You can specify the incremental materialization on the top of the file
 ## Querys for the incremental materialization
 ### Get every review for listing 3176:
@@ -304,5 +304,28 @@ DROP VIEW AIRBNB.DEV.SRC_REVIEWS;
  )
 }}
 ```
-
-
+## Seeds ans sources
+![Seeds and sources](images/seeds_sources.PNG)
+## You can add your seeds in seeds folder on the project root
+## Then execute:
+```
+dbt seed
+```
+## Sources can be specified in a .yml file in the models folder
+## Sources are very useful when you want to use a data source that can be moved to another location
+## Check if the project has an error
+```
+dbt compile
+```
+## Add freshness to the project
+## In the sources.yml file, add the following line:
+```
+loaded_at_field: date
+ freshness:
+ warn_after: {count: 1, period: hour}
+ error_after: {count: 24, period: hour}
+```
+## Check the freshness of the data
+```
+dbt source freshness
+```
