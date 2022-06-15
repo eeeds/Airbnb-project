@@ -329,3 +329,20 @@ loaded_at_field: date
 ```
 dbt source freshness
 ```
+## Add snapshots to the project:
+## What is snapshot in Snowflake?
+Snowflake's zero-copy cloning feature provides a convenient way to quickly take a “snapshot” of any table, schema, or database and create a derived copy of that object which initially shares the underlying storage.
+## Test your snapshot with:
+```
+dbt snapshot
+```
+## You can see changes updating data in snowflake:
+```
+UPDATE AIRBNB.RAW.RAW_LISTINGS SET MINIMUM_NIGHTS=30,
+ updated_at=CURRENT_TIMESTAMP() WHERE ID=3176;
+```
+## Execute again dbt snapthot and then execute:
+```
+SELECT * FROM AIRBNB.DEV.SCD_RAW_LISTINGS WHERE ID=3176;
+```
+
