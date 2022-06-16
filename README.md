@@ -1,4 +1,5 @@
 ## Project where I'll use snowflake, DBT and preset to analyze data produced by airbnb
+![Project pipeline](images/final.png)
 
 ### First: Register to Snowflake
 Go to [https://snowflake.net/](https://snowflake.net/) and register.
@@ -513,4 +514,67 @@ ORDER BY
 ```
 dbt compile
 ```
+## Hooks:
+Hooks are snippets of SQL that are executed at different times:
 
+-    pre-hook: executed before a model, seed or snapshot is built.
+
+-   post-hook: executed after a model, seed or snapshot is built.
+
+-   on-run-start: executed at the start of dbt run, dbt seed or dbt snapshot
+
+-   on-run-end: executed at the end of dbt run, dbt seed or dbt snapshot
+
+Hooks are defined in your dbt_project.yml file. Pre- and post-hooks can also be defined in a config block
+## Create the reporter role and preset user in Snowflake:
+```
+SNOWFLAKE
+USE ROLE ACCOUNTADMIN;
+CREATE ROLE IF NOT EXISTS REPORTER;
+CREATE USER IF NOT EXISTS PRESET
+ PASSWORD='presetPassword123'
+ LOGIN_NAME='preset'
+ MUST_CHANGE_PASSWORD=FALSE
+ DEFAULT_WAREHOUSE='COMPUTE_WH'
+ DEFAULT_ROLE='REPORTER'
+ DEFAULT_NAMESPACE='AIRBNB.DEV'
+ COMMENT='Preset user for creating reports';
+GRANT ROLE REPORTER TO USER PRESET;
+GRANT ROLE REPORTER TO ROLE ACCOUNTADMIN;
+GRANT ALL ON WAREHOUSE COMPUTE_WH TO ROLE REPORTER;
+GRANT USAGE ON DATABASE AIRBNB TO ROLE REPORTER;
+GRANT USAGE ON SCHEMA AIRBNB.DEV TO ROLE REPORTER;
+GRANT SELECT ON ALL TABLES IN SCHEMA AIRBNB.DEV TO ROLE REPORTER;
+GRANT SELECT ON ALL VIEWS IN SCHEMA AIRBNB.DEV TO ROLE REPORTER;
+GRANT SELECT ON FUTURE TABLES IN SCHEMA AIRBNB.DEV TO ROLE REPORTER;
+GRANT SELECT ON FUTURE VIEWS IN SCHEMA AIRBNB.DEV TO ROLE REPORTER;
+```
+## Add a hook for reporter role (add in dbt_project.yml file):
+```
+ +post-hook:
+      - "GRANT SELECT ON {{ this }} TO ROLE REPORTER"
+```
+## Run dbt run
+## Go to preset website and create an account
+[Preset](https://preset.io/)
+
+## Obtain your profile from:
+```
+cat ~/.dbt/profiles.yml 
+```
+## Create a dashboard with mart_fullmoon_reviews.sql
+## Save the dashboard link 
+## Exposures:
+Exposures make it possible to define and describe a downstream use of your dbt project, such as in a dashboard, application, or data science pipeline. By defining exposures, you can then:
+
+-   run, test, and list resources that feed into your exposure
+-   populate a dedicated page in the auto-generated documentation site with context relevant to data consumers
+
+Declaring an exposure
+
+Exposures are defined in .yml files nested under an exposures: key.
+
+## Create dashboard.yml file in models folder
+
+## Execute 
+```dbt docs generate``` and ```dbt docs serve```
