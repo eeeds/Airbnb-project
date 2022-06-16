@@ -1,4 +1,4 @@
-## Project where I'll use snowflake, DBT and preset to analyze data produced by airnb
+## Project where I'll use snowflake, DBT and preset to analyze data produced by airbnb
 
 ### First: Register to Snowflake
 Go to [https://snowflake.net/](https://snowflake.net/) and register.
@@ -440,4 +440,13 @@ packages:
     version: 0.8.6
 ```
 Run  ```dbt deps``` to install the package.
-## Use surrogate_key
+## Use surrogate_key: 
+## Add the following line in fct_reviews.sql:
+```
+ {{ dbt_utils.surrogate_key(['listing_id', 'review_date', 'reviewer_name', 'review_text']) }}
+```
+### Rebuild incremental tables on select fct_reviews
+```
+dbt run --full-refresh --select fct_reviews
+```
+
