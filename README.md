@@ -408,4 +408,36 @@ dbt test --select dim_listings_cleansed
 ```{{
 no_nulls_in_columns('dim_listings_cleansed')}}
 ```
-
+## Custom generic tests
+## Create positive_values test in macros folder:
+```
+{% test positive_value(model, column_name) %}
+SELECT
+ *
+FROM
+ {{ model }}
+WHERE
+ {{ column_name}} < 1
+{% endtest %}
+```
+## Add a test in schema.yml file:
+```
+- name: minimum_nights
+      tests: 
+        - positive_values
+```
+## Run the tests
+```
+dbt test
+```
+## Third-party Packages
+Visit [Hub GetDBT](hub.getdbt.com)
+## Install dbt-utils
+Include the following in your packages.yml file:
+```
+packages:
+  - package: dbt-labs/dbt_utils
+    version: 0.8.6
+```
+Run  ```dbt deps``` to install the package.
+## Use surrogate_key
