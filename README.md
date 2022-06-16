@@ -392,5 +392,6 @@ where value_field not in (
 ```
 dbt test --select dim_listings_cleansed
 ```
-
+## Macros:
+![Macros](images/macros.PNG)
 
