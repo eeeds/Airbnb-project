@@ -388,6 +388,9 @@ where value_field not in (
 )
 ```
 ## Singular test: They live in the tests folder
-
+## Run only tests related to a specific model
+```
+dbt test --select dim_listings_cleansed
+```
 
 
