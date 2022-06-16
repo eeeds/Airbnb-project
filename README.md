@@ -445,8 +445,48 @@ Run  ```dbt deps``` to install the package.
 ```
  {{ dbt_utils.surrogate_key(['listing_id', 'review_date', 'reviewer_name', 'review_text']) }}
 ```
-### Rebuild incremental tables on select fct_reviews
+### Rebuild incremental tables: fct_reviews
 ```
 dbt run --full-refresh --select fct_reviews
+```
+## Documentation:
+Documentations can be defined two ways:
+
+-   In yaml files(like schema.yml)
+-   In standole markdown files
+
+Dbt ships with a lightweight documentation web server
+
+For customizing the landing page, a special file, overview.md is used
+
+You can add your own assets (like images) to a special project folder
+
+## Add documentation to dim_cleansed_listings: Add description in schema.yml file
+## After that, run:
+```
+dbt docs generate
+```
+## You can see more of your documentation doing:
+## Open your browser and go to http://localhost:8000/docs/
+```
+dbt docs serve
+```
+## Documentation with md files
+## Create a markdown file in the project
+```
+{% docs dim_listing_cleansed__minimum_nights %}
+Minimum number of nights required to rent this property. 
+Keep in mind that old listings might have `minimum_nights` set 
+to 0 in the source tables. Our cleansing algorithm updates this to `1`.
+{% enddocs %}
+```
+## Generate overview.md file
+```
+{% docs __overview__ %}
+# Airbnb pipeline
+Hey, welcome to our Airbnb pipeline documentation!
+Here is the schema of our input data:
+![input schema](https://dbtlearn.s3.us-east-2.amazonaws.com/input_schema.png)
+{% enddocs %}
 ```
 
