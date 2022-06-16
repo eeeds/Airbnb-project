@@ -489,4 +489,28 @@ Here is the schema of our input data:
 ![input schema](https://dbtlearn.s3.us-east-2.amazonaws.com/input_schema.png)
 {% enddocs %}
 ```
+## Analyses: 
+Dbt's notion of models makes it easy for data teams to version control and collaborate on data transformations. Sometimes though, a certain sql statement doesn't quite fit into the mold of a dbt model. These more "analytical" sql files can be versioned inside of your dbt project using the analysis functionality of dbt.
+## Create full_moon_no_sleep.sql file in analyses folder:
+```
+WITH mart_fullmoon_reviews AS (
+ SELECT * FROM ref('mart_fullmoon_reviews')
+)
+SELECT
+ is_full_moon,
+ review_sentiment,
+ COUNT(*) as reviews
+FROM
+ mart_fullmoon_reviews
+GROUP BY
+ is_full_moon,
+ review_sentiment
+ORDER BY
+ is_full_moon,
+ review_sentiment
+```
+## Run it using:
+```
+dbt compile
+```
 
