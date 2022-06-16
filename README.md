@@ -345,4 +345,48 @@ UPDATE AIRBNB.RAW.RAW_LISTINGS SET MINIMUM_NIGHTS=30,
 ```
 SELECT * FROM AIRBNB.DEV.SCD_RAW_LISTINGS WHERE ID=3176;
 ```
+## Tests
+![Tests](images/tests.PNG)
+## Create source.yml where you can specify the tests that you want to run:
+```
+version: 2
+models:
+  - name: dim_listings_cleansed
+    columns:
+    - name: listing_id
+      tests:
+       - unique
+       - not_null
+```
+## Run the tests
+```
+dbt test
+```
+## Then you can see if your tests are passing
+## Debug a test
+## When a test fails, you can debug it by running:
+```
+code/cat target/compiled/dbtlearn/models/{path_to_test.yml}/{test_name}
+```
+## Accepted values debug:
+```
+with all_values as (
+
+    select
+        room_type as value_field,
+        count(*) as n_records
+
+    from airbnb.dev.dim_listings_cleansed
+    group by room_type
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'Entire home/apt - break this','Private room','Shared room','Hotel room'
+)
+```
+
+
 
