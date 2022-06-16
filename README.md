@@ -394,4 +394,18 @@ dbt test --select dim_listings_cleansed
 ```
 ## Macros:
 ![Macros](images/macros.PNG)
+## Create no_nulls_in_columsn macro (Use Jinja documentation to create your own macros)):
+```
+% macro no_nulls_in_columns(model) %}
+ SELECT * FROM {{ model }} WHERE
+ {% for col in adapter.get_columns_in_relation(model) -%}
+ {{ col.column }} IS NULL OR
+ {% endfor %}
+ FALSE
+{% endmacro %}
+```
+## Create a test-model to test the macro:
+```{{
+no_nulls_in_columns('dim_listings_cleansed')}}
+```
 
