@@ -15,7 +15,7 @@ models:
     - name: room_type
       tests:
         - accepted_values:
-            values: ['Entire home/apt - break this',
+            values: ['Entire home/apt',
               'Private room',
               'Shared room','Hotel room']
 

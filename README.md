@@ -347,7 +347,7 @@ SELECT * FROM AIRBNB.DEV.SCD_RAW_LISTINGS WHERE ID=3176;
 ```
 ## Tests
 ![Tests](images/tests.PNG)
-## Create source.yml where you can specify the tests that you want to run:
+## Generic tests: Create source.yml (you can create whatever you want) where you can specify the tests that you want to run:
 ```
 version: 2
 models:
@@ -387,6 +387,7 @@ where value_field not in (
     'Entire home/apt - break this','Private room','Shared room','Hotel room'
 )
 ```
+## Singular test: They live in the tests folder
 
 
 
