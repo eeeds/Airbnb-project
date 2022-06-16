@@ -1,5 +1,5 @@
 ## Project where I'll use snowflake, DBT and preset to analyze data produced by airbnb
-![Project pipeline](images/final.png)
+![Project pipeline](images/final.PNG)
 
 ### First: Register to Snowflake
 Go to [https://snowflake.net/](https://snowflake.net/) and register.
